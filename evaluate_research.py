@@ -1,0 +1,36 @@
+from state import OverallState, ReflectionState
+from langgraph.types import Send
+
+def evaluate_research(
+    state: ReflectionState,
+) -> OverallState:
+    """LangGraph routing function that determines the next step in the research flow.
+
+    Controls the research loop by deciding whether to continue gathering information
+    or to finalize the summary based on the configured maximum number of research loops.
+
+    Args:
+        state: Current graph state containing the research loop count
+        config: Configuration for the runnable, including max_research_loops setting
+
+    Returns:
+        String literal indicating the next node to visit ("web_research" or "finalize_summary")
+    """
+    max_research_loops = (
+        state.get("max_research_loops")
+        if state.get("max_research_loops") is not None
+        else 5
+    )
+    if state["is_sufficient"] or state["research_loop_count"] >= max_research_loops:
+        return "finalize_answer"
+    else:
+        return [
+            Send(
+                "web_research",
+                {
+                    "search_query": follow_up_query,
+                    "id": state["number_of_ran_queries"] + int(idx),
+                },
+            )
+            for idx, follow_up_query in enumerate(state["follow_up_queries"])
+        ]
