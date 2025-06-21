@@ -84,6 +84,7 @@ Instructions:
 - You have access to the user's question.
 - Generate a high-quality answer to the user's question based on the provided summaries and the user's question.
 - you MUST include all the citations from the summaries in the answer correctly.
+- Attribute each specific fact to its source by mentioning the source name and hyperlink at the end of the sentence in this format: [Source Name like The hindu etc ](URL).
 
 User Context:
 - {research_topic}
