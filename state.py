@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import TypedDict, List
+from typing import TypedDict, List, Set
 
 from langgraph.graph import add_messages
 from typing_extensions import Annotated
@@ -24,6 +24,7 @@ class ReflectionState(TypedDict):
     follow_up_queries: Annotated[list, operator.add]
     research_loop_count: int
     number_of_ran_queries: int
+    queries_sent: Set[str]
 
 
 class Query(TypedDict):

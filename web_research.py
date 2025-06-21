@@ -1,5 +1,5 @@
 import asyncio
-from tavily import AsyncTavilyClient, TavilyClient
+from tavily import AsyncTavilyClient
 from langchain_openai import ChatOpenAI
 from state import OverallState, WebSearchState
 from prompts import web_researcher_prompt
@@ -7,20 +7,21 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Async fetch function
-def fetch_and_gather(search_queries):
-    tavily_client = TavilyClient() 
-    response = tavily_client.search(search_queries, search_depth="advanced",
-                                   include_answer="advanced",
-                                   max_results=5 ),
-    
+async def fetch_and_gather(search_queries):
+    tavily_client = AsyncTavilyClient()
+    response = await tavily_client.search(
+        search_queries,
+        search_depth="advanced",
+        include_answer="advanced",
+        max_results=5,
+    )
     return response
-
 
 def format_search_results(queries_with_results):
     formatted = ""
-    q = queries_with_results[0]
+    q = queries_with_results
     formatted += f"🔍 Query: {q['query']}\n"
-    for i, result in enumerate(q["results"], 1):
+    for i, result in enumerate(q.get("results", []), 1):
         formatted += (
             f"{i}. Title: {result['title']}\n"
             f"   URL: {result['url']}\n"
@@ -28,9 +29,9 @@ def format_search_results(queries_with_results):
         )
     return formatted
 
-# The web research function
-def web_research(state: WebSearchState) -> OverallState:
-    search_results = fetch_and_gather(state["search_query"])
+# The web research function (now async)
+async def web_research(state: WebSearchState) -> OverallState:
+    search_results = await fetch_and_gather(state["search_query"])
     formatted_results = format_search_results(search_results)
     
     llm = ChatOpenAI(
@@ -38,7 +39,7 @@ def web_research(state: WebSearchState) -> OverallState:
         temperature=1,
     )
     
-    result = llm.invoke(
+    result = await llm.ainvoke(
         [
             {
                 "role": "system",
@@ -51,11 +52,10 @@ def web_research(state: WebSearchState) -> OverallState:
         ]
     )
     
-    sources_gathered =[]
-    for search_result in search_results:
-        for res in search_result.get('results', []):
-            if res['url'] not in sources_gathered:
-                sources_gathered.append(res['url'])
+    sources_gathered = []
+    for res in search_results.get('results', []):
+        if res['url'] not in sources_gathered:
+            sources_gathered.append(res['url'])
                 
     return {
         "web_research_result": [result.content],
@@ -63,11 +63,15 @@ def web_research(state: WebSearchState) -> OverallState:
         "search_query": [state["search_query"]],
     }
 
+# Example usage for testing
 if __name__ == "__main__":
-    # Example usage
-    state = {
-  "search_query": [
-    "Latest India geopolitical news and analysis June 2025"
-  ]
-}
-    result = web_research(state)
+    async def main():
+        state = {
+            "search_query": [
+                "Latest India geopolitical news and analysis June 2025"
+            ]
+        }
+        result = await web_research(state)
+        print(result)
+
+    asyncio.run(main())
