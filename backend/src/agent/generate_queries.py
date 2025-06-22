@@ -1,9 +1,9 @@
 from langchain_core.messages import HumanMessage
 
-from state import OverallState, QueryGenerationState
-from schemas import SearchQueryList
-from utils import get_current_date, get_research_topic
-from prompts import generate_queries_prompt
+from agent.state import OverallState, QueryGenerationState
+from agent.schemas import SearchQueryList
+from agent.utils import get_current_date, get_research_topic
+from agent.prompts import generate_queries_prompt
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 load_dotenv()

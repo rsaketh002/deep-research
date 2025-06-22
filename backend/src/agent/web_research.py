@@ -1,8 +1,8 @@
 import asyncio
 from tavily import AsyncTavilyClient
 from langchain_openai import ChatOpenAI
-from state import OverallState, WebSearchState
-from prompts import web_researcher_prompt
+from agent.state import OverallState, WebSearchState
+from agent.prompts import web_researcher_prompt
 from dotenv import load_dotenv
 load_dotenv()
 

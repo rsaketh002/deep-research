@@ -2,13 +2,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from langgraph.graph import StateGraph, START, END
-from generate_queries import generate_search_queries
-from continue_to_web_research import continue_to_web_research
-from web_research import web_research
-from reflection import reflect_on_search_results
-from evaluate_research import evaluate_research
-from finalize_answer import finalize_answer
-from state import OverallState
+from agent.generate_queries import generate_search_queries
+from agent.continue_to_web_research import continue_to_web_research
+from agent.web_research import web_research
+from agent.reflection import reflect_on_search_results
+from agent.evaluate_research import evaluate_research
+from agent.finalize_answer import finalize_answer
+from agent.state import OverallState
 
 builder = StateGraph(OverallState)
 
@@ -34,4 +34,4 @@ builder.add_conditional_edges(
 
 builder.add_edge("finalize_answer", END)
 
-graph = builder.compile()
+graph = builder.compile(name="pro-search-agent")
