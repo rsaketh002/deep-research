@@ -1,7 +1,7 @@
-from agent.state import OverallState, ReflectionState
-from agent.schemas import Reflection
-from agent.utils import get_current_date, get_research_topic
-from agent.prompts import reflection_prompt
+from state import OverallState, ReflectionState
+from schemas import Reflection
+from utils import get_current_date, get_research_topic
+from prompts import reflection_prompt
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 load_dotenv()

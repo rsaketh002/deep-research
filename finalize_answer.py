@@ -1,8 +1,8 @@
-from agent.state import OverallState
+from state import OverallState
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import AIMessage
-from agent.utils import get_current_date, get_research_topic
-from agent.prompts import answer_prompt
+from utils import get_current_date, get_research_topic
+from prompts import answer_prompt
 from dotenv import load_dotenv
 load_dotenv()
 

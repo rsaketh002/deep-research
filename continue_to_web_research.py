@@ -1,5 +1,5 @@
 from langgraph.types import Send
-from agent.state import QueryGenerationState
+from state import QueryGenerationState
 
 def continue_to_web_research(state: QueryGenerationState):
     """LangGraph node that sends the search queries to the web research node.
